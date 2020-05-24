@@ -1,0 +1,19 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Forkify project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daniel-Wh/ForkifyJS.git"
+  },
+  "author": "Daniel Whitney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Daniel-Wh/ForkifyJS/issues"
+  },
+  "homepage": "https://github.com/Daniel-Wh/ForkifyJS#readme"
+}

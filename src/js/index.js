@@ -59,6 +59,8 @@ const controlRecipe = async () =>{
         //prepare ui for changes
         recipeView.clearResults();
         renderLoader(elements.recipe)
+        // highlight the selected element
+        if(state.search) searchView.highlightSelected(id);
         
         //create recipe object
         state.recipe = new Recipe(id);
@@ -88,6 +90,23 @@ const controlRecipe = async () =>{
 
  ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
+ // recipe button clicks
+
+elements.recipe.addEventListener('click', e => {
+    if (e.target.matches('.btn-decrease, .btn-decrease *')) {
+        if (state.recipe.servings > 1) {
+            state.recipe.updateServings('dec');
+            recipeView.updateServingsIngredients(state.recipe);
+        }
+    }
+
+    if (e.target.matches('.btn-increase, .btn-increase *')) {
+
+        state.recipe.updateServings('inc');
+        recipeView.updateServingsIngredients(state.recipe);
+
+    }
+})
 
 //for recipe.js
 // const res = await axios(`https://forkify-api.herokuapp.com/api/get?rId=${this.id}`);

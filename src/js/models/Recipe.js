@@ -4,6 +4,9 @@ export default class Recipe {
     constructor(id){
         this.id = id;
     }
+    /**
+     * makes api call with id - if successfule, title/author/img/url/ingredients[] added to recipe object, logs error if not
+     */
     async getRecipe() {
         try{
             const res = await axios(`https://forkify-api.herokuapp.com/api/get?rId=${this.id}`)
@@ -16,27 +19,31 @@ export default class Recipe {
         }
         catch (error){
             console.log(error)
-            alert('Something went wrong :(')
         }
     }
-
+    /**
+     * estimating cooking time 15 mins for each ingredient ** not accurate
+     */
     calcTime() {
-        // estimating cooking time 15 mins for each ingredient ** not accurate
         const numIng = this.ingredients.length;
         this.time = Math.ceil(numIng / 3) * 15
     }
-
+    /**
+     * auto set to 4, not accurate
+     */
     calcServings() {
         this.servings = 4;
     }
-
+    /**
+     * string formatting for ingredients for more uniform presentation
+     */
     parseIngredients(){
-
+        // initialize two arrays with matching lengths for comparison and index matching later
         const unitsLong = ['tablespoons', 'tablespoon', 'ounce', 'ounces', 'teaspoons', 'teaspoon', 'cups', 'pounds', 'pound', 'grams', 'gram', 'kilograms', 'kilogram']
         const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'lb', 'lb', 'g', 'g', 'kg', 'kg']
         const newIngredients = this.ingredients.map(el =>{
             // uniform units
-            let ingredient = el.toLowerCase();
+            let ingredient = el.toLowerCase(); 
             unitsLong.forEach((unit, i) =>{
                 ingredient = ingredient.replace(unit, unitsShort[i]);
             })
@@ -51,7 +58,7 @@ export default class Recipe {
                 const arrCount = arrIng.slice(0, unitIndex);
                 let count;
                 if(arrCount.length === 1){
-                    count = eval(arrIng[0].replace('-', '+'));
+                    count = eval(arrIng[0].replace('-', '+')); // using eval to go from 4 1/2 to 4.5 - will format further later
                 } else {
                     count = eval(arrIng.slice(0, unitIndex).join('+'));
                 }
@@ -82,7 +89,10 @@ export default class Recipe {
         });
         this.ingredients = newIngredients;
     }
-
+    /**
+     * updates servings up or down based on type parameter
+     * @param {'inc' || 'dec'} type 
+     */
     updateServings(type){
         //update servings
         const newServings = type === 'dec' ? this.servings -1 : this.servings + 1

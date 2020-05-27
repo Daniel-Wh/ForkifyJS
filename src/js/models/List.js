@@ -5,7 +5,12 @@ export default class List {
     constructor(){
         this.items = [];
     }
-    
+    /**
+     * add Item to List object - returns item added with unique id
+     * @param {number} count 
+     * @param {string} unit 
+     * @param {string} ingredient 
+     */
     addItem (count, unit, ingredient){
         const item = {
             id: uniqid(),

@@ -15,6 +15,10 @@ const createIngredient = ingredient => `
     </li>
             `;
 
+ /**
+  * formats count variable from 4.5 to 4 1/2
+  * @param {number} count 
+  */           
 const formatCount = count => {
     if(count) {
         const[int, dec] = count.toString().split('.').map(el => parseInt(el, 10))

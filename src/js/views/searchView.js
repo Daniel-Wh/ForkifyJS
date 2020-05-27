@@ -2,6 +2,11 @@ import { elements } from './base';
 
 export const getInput = () => elements.searchInput.value;
 
+/**
+ * format string to 17 character default
+ * @param {string} title 
+ * @param {number = 17} limit 
+ */
 export const limitRecipeTitle = (title, limit = 17) => {
     const newTitle = [];
     if(title.length > limit){

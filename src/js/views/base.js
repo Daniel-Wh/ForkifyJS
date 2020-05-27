@@ -1,3 +1,6 @@
+/**
+ * Central query selection object
+ */
 export const elements = {
     searchInput: document.querySelector('.search__field'),
     searchForm: document.querySelector('.search'),
@@ -13,7 +16,10 @@ export const elements = {
 export const elementStrings = {
     loader: 'loader'
 };
-
+/**
+ * adds animated loader on parent element
+ * @param {HTML Element} parent 
+ */
 export const renderLoader = parent => {
     const loader = `
     <div class="${elementStrings.loader}">
@@ -25,7 +31,9 @@ export const renderLoader = parent => {
 
     parent.insertAdjacentHTML('afterbegin', loader);
 };
-
+/**
+ * removes animated loader
+ */
 export const clearLoader = () =>{
     const loader = document.querySelector(`.${elementStrings.loader}`);
     if(loader){

@@ -1,4 +1,3 @@
-import List from '../models/List';
 import { elements } from './base';
 
 export const renderItem = item => {

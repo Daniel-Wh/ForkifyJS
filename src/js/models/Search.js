@@ -4,7 +4,10 @@ export default class Search{
     constructor(query){
         this.query = query;
     }
-
+    /**
+     * API call for recipe based on ID
+     * @param {recipeID} query 
+     */
     async getResults(query){
         try {
             const res = await axios(`https://forkify-api.herokuapp.com/api/search?&q=${this.query}`);

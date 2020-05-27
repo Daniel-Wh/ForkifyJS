@@ -23,6 +23,7 @@ const state = {}
 const controlSearch = async() =>{
     // get query from view
     const query = searchView.getInput();
+    // confirm there is imput before moving forward
     if(query) {
         // new search object and add to state
         state.search = new Search(query);
@@ -33,16 +34,22 @@ const controlSearch = async() =>{
         // get search results
         await state.search.getResults();
         // 
-        clearLoader();
+        clearLoader(); 
         searchView.renderResults(state.search.result);
     }
     // 
 };
-
+/**
+ * event listener for user hitting enter on keyboard instead of click
+ */
 elements.searchForm.addEventListener('submit', e =>{
     e.preventDefault();
     controlSearch();
 })
+
+/**
+ * event listener for search result pagination
+ */
 elements.searchResPages.addEventListener('click', e => {
     const btn = e.target.closest('.btn-inline');
     if(btn){
@@ -80,6 +87,7 @@ const controlRecipe = async () =>{
         state.recipe.parseIngredients();
         // clear loader
         clearLoader(elements.recipe);
+        // check that there are likes
         if(state.likes){
             recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
         } else {
@@ -93,13 +101,15 @@ const controlRecipe = async () =>{
 } 
 
 
-//  window.addEventListener('hashchange', controlRecipe);
-//  window.addEventListener('load', controlRecipe);
-
+/**
+ * event listener for changing recipe and loading page with recipe id in header
+ */
  ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
  // recipe button clicks
-
+/**
+ * event listener for servings increase/decrease, likes, and adding to shopping list 
+ */
 elements.recipe.addEventListener('click', e => {
     if (e.target.matches('.btn-decrease, .btn-decrease *')) {
         if (state.recipe.servings > 1) {
@@ -140,6 +150,9 @@ const controlList = () => {
     })
 }
 
+/**
+ * event listener for shopping list removing and updating shopping list items
+ */
 elements.shoppingList.addEventListener('click', e => {
     const id = e.target.closest('.shopping__item').dataset.itemid;
     console.log(id);
@@ -166,8 +179,6 @@ elements.shoppingList.addEventListener('click', e => {
  */
 const controlLike = () => {
     if(!state.likes) state.likes = new Likes(); // generate Likes object if there isn't one
-
-
     const currentID = state.recipe.id;
     console.log(currentID);
 
@@ -198,8 +209,12 @@ const controlLike = () => {
 
     likesView.toggleLikeMenu(state.likes.getNumLikes());
 }
-
-
-likesView.toggleLikeMenu(0);
-//for recipe.js
-// const res = await axios(`https://forkify-api.herokuapp.com/api/get?rId=${this.id}`);
+/**
+ * event listener for loading the page to load persistently stored likes from local storage
+ */
+window.addEventListener('load', () => {
+    state.likes = new Likes();
+    state.likes.readStorage();
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+    state.likes.likes.forEach(like => likesView.renderLike(like));
+})

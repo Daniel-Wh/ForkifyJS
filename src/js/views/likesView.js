@@ -1,12 +1,19 @@
 import { elements } from './base';
-
 import { limitRecipeTitle } from './searchView';
 
+
+/**
+ * toggles liked button based on bool value whether item is liked or not
+ * @param {bool} isLiked 
+ */
 export const toggleLikeBtn = isLiked => {
     const iconString = isLiked ? 'icon-heart' : 'icon-heart-outlined'
     document.querySelector('.recipe__love use').setAttribute('href', `img/icons.svg#${iconString}`);
 };
-
+/**
+ * toggles likes menu whether an item has been liked
+ * @param {number} numLikes 
+ */
 export const toggleLikeMenu = numLikes => {
     elements.likesMenu.style.visibility = numLikes > 0 ? 'visible' : 'hidden';
 };

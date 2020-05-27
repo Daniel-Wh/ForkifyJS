@@ -1,10 +1,13 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Likes from './models/Likes';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
+import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
+
 /**
  * Global state of the app
  * - Search Object 
@@ -77,7 +80,11 @@ const controlRecipe = async () =>{
         state.recipe.parseIngredients();
         // clear loader
         clearLoader(elements.recipe);
-        recipeView.renderRecipe(state.recipe);
+        if(state.likes){
+            recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
+        } else {
+            recipeView.renderRecipe(state.recipe, false);
+        }
         } catch(error){
             console.log(error);
         }
@@ -108,8 +115,12 @@ elements.recipe.addEventListener('click', e => {
 
     }
     if(e.target.matches('.recipe__btn--add, .recipe__btn--add *')){
-        console.log('recipe add btn clicked')
+        // add ingredients to shopping list
         controlList();
+    }
+    if(e.target.matches('.recipe__love, .recipe__love *')){
+        //like controller
+        controlLike();
     }
 })
 
@@ -150,5 +161,45 @@ elements.shoppingList.addEventListener('click', e => {
 })
 
 
+/**
+ * Like controller
+ */
+const controlLike = () => {
+    if(!state.likes) state.likes = new Likes(); // generate Likes object if there isn't one
+
+
+    const currentID = state.recipe.id;
+    console.log(currentID);
+
+
+    if(!state.likes.isLiked(currentID)){
+        // add current recipe to likes
+
+        console.log(state.recipe.title)
+        const newLike = state.likes.addLike(state.recipe.id, 
+            state.recipe.title,
+            state.recipe.author,
+            state.recipe.img);
+            console.log(newLike);
+        //toggle like button
+        likesView.toggleLikeBtn(true);
+        //add like to UI list
+        likesView.renderLike(newLike);
+       
+    } else {
+        // remove current recipe from likes
+        state.likes.deleteLike(currentID);
+        //toggle like
+        likesView.toggleLikeBtn(false);
+
+        // remove like from ui list
+        likesView.deleteLike(currentID);
+    }
+
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+}
+
+
+likesView.toggleLikeMenu(0);
 //for recipe.js
 // const res = await axios(`https://forkify-api.herokuapp.com/api/get?rId=${this.id}`);

@@ -1,7 +1,9 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import List from './models/List';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
+import * as listView from './views/listView';
 import { elements, renderLoader, clearLoader } from './views/base';
 /**
  * Global state of the app
@@ -84,7 +86,6 @@ const controlRecipe = async () =>{
 } 
 
 
-
 //  window.addEventListener('hashchange', controlRecipe);
 //  window.addEventListener('load', controlRecipe);
 
@@ -106,7 +107,48 @@ elements.recipe.addEventListener('click', e => {
         recipeView.updateServingsIngredients(state.recipe);
 
     }
+    if(e.target.matches('.recipe__btn--add, .recipe__btn--add *')){
+        console.log('recipe add btn clicked')
+        controlList();
+    }
 })
+
+
+/**
+ * List Controller
+ */
+const controlList = () => {
+    // create new list if none
+    if(!state.list) state.list = new List();
+
+    // add each ingredient to list
+    state.recipe.ingredients.forEach(el => {
+        const item = state.list.addItem(el.count, el.unit, el.ingredient);
+        listView.renderItem(item)
+
+    })
+}
+
+elements.shoppingList.addEventListener('click', e => {
+    const id = e.target.closest('.shopping__item').dataset.itemid;
+    console.log(id);
+    if(e.target.matches('.shopping__delete, .shopping__delete *')){
+        console.log('delete clicked')
+        // delete from state
+        state.list.deleteItem(id);
+        // delete from ui
+        listView.deleteItem(id);
+    } else if(e.target.matches('.shopping__count-value')){
+        const val = parseFloat(e.target.value, 10);
+        console.log(val);
+        if(val > 0){
+            state.list.updateCount(id, val);
+        }
+        
+
+    }
+})
+
 
 //for recipe.js
 // const res = await axios(`https://forkify-api.herokuapp.com/api/get?rId=${this.id}`);
